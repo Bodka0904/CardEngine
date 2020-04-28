@@ -11,26 +11,51 @@
 
 namespace Dot
 {
-    int Input::KeyPressed()
+    Input *Input::s_Instance = new Input();
+    Input::Input()
     {
-        static bool initflag = false;
-        static const int STDIN = 0;
+        TurnOn();
+    }
 
-        //if (!initflag) 
+    Input::~Input()
+    {
+        TurnOff();
+    }
+    void Input::Destroy()
+    {
+        delete s_Instance;
+    }
+    void Input::TurnOff()
+    {
+        termios term;
+        tcgetattr(0, &term);
+        term.c_lflag |= ICANON | ECHO;
+        tcsetattr(0, TCSANOW, &term);
+    }
+    void Input::TurnOn()
+    {
+        termios term;
+        tcgetattr(0, &term);
+        term.c_lflag &= ~(ICANON | ECHO); // Disable echo as well
+        tcsetattr(0, TCSANOW, &term);
+    }
+    bool Input::KeyPressed(KeyCode key)
+    {
+        int input = 0;
+        if (s_Instance->kbhit())
         {
-            // Use termios to turn off line buffering
-            struct termios term;
-            tcgetattr(STDIN, &term);
-            term.c_lflag &= ~ICANON;
-            tcsetattr(STDIN, TCSANOW, &term);
-            setbuf(stdin, NULL);
-            initflag = true;
+            input = getchar();
+            tcflush(0, TCIFLUSH);   
         }
-
-        int nbbytes;
-        ioctl(STDIN, FIONREAD, &nbbytes);  // 0 is STDIN
-        return nbbytes;
+        return input == static_cast<std::underlying_type_t<KeyCode>>(key);
     }   
 
+    bool Input::kbhit()
+    {
+        int byteswaiting;
+        ioctl(0, FIONREAD, &byteswaiting);
+
+        return byteswaiting > 0;
+    }
 }
 

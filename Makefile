@@ -21,14 +21,17 @@ $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) $(OBJECTS) -o $(TARGET)
 
 
+#Possibly does not work xD
+.PHONY: clean 
+#Clean
+clean:
+	@rm -rf $(OBJDIR)
+
+
 #build objects and dependencies
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p '$(@D)'
 	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@ 
 
 
-#Possibly does not work xD
-.PHONY: clean 
-#Clean
-clean:
-	@rm -rf $(OBJDIR)
+

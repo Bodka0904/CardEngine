@@ -1,25 +1,35 @@
-//#include "Window.h"
-//#include "Input.h"
+#include "Renderer.h"
+#include "Input.h"
+#include "FrameTime.h"
+#include "Game.h"
 
 #include <iostream>
-#include <linux/input.h>
 
-int main()
-{
-    //Dot::Input input;
-    //Dot::Window * win;
-    //win = new Dot::Window(40,40,0.1f);
 
-    //while (true)
+#include "CardDeck.h"
+
+
+    using namespace Dot;
+
+    int main()
     {
-        //win->BeginFrame();
+        FrameTime frameTime;
+        bool running = true;
 
-        //if (input.KeyPressed())
+        Game game;
+        while (running)
         {
-            //char k;
-            //std::cin >> k;
-        }
+            frameTime.EndFrame();
+            frameTime.StartFrame();
 
-        //win->EndFrame();
-    }    
-}
+           
+            game.Run(frameTime.GetSeconds());
+            if (Input::KeyPressed(KeyCode::q))
+                running = false;
+        }    
+
+        Renderer::Shutdown();
+        Input::Destroy();
+
+        return 0;
+    }
