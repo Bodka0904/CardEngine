@@ -5,7 +5,8 @@ namespace Dot {
     {
     public:
         Card(int attack,int defense,int agillity,int health);
-
+        virtual ~Card();
+        
         enum Type
         {
             Warrior,

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 
 
 namespace Dot
@@ -83,6 +84,22 @@ namespace Dot
             for (int x = l1.x; x < l2.x; ++x)
             {
                 s_Instance->SetPixel(Vec2(x,y),c);
+            }
+        }
+    }
+    int pth (int x,int y)  
+    {
+        return sqrt (pow(x,2)+pow(y,2));
+    }
+    void Renderer::DrawCircle(const Vec2& pos,int radius, char c)
+    {
+        int length = radius * 1.5;
+        for (int y = -radius; y <= radius; y += 2)  
+        {
+            for (int x = -length; x <= length; x++)  
+            {
+                if (pth(x,y) == radius) 
+                    s_Instance->SetPixel(Vec2(x + pos.x,y + pos.y),c);
             }
         }
     }

@@ -18,6 +18,7 @@ namespace Dot
         static void SetPixel(const Vec2& pixel,char c);
         static void SetPixelSequence(const Vec2& pixel,const std::string& text);
         static void DrawQuad(const Vec2& l1,const Vec2& l2, char c);
+        static void DrawCircle(const Vec2& pos,int radius, char c);
         
     private:
         Renderer(float frameLen);

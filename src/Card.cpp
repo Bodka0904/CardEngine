@@ -31,6 +31,10 @@ namespace Dot {
         m_Health(health)
     {}
 
+    Card::~Card()
+    {
+
+    }
     
     WarriorCard::WarriorCard(int attack, int defense,int agillity,int health)
         : Card(attack,defense,agillity,health)
