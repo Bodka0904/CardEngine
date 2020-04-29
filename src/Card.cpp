@@ -2,6 +2,8 @@
 #include "Renderer.h"
 
 #include <random>
+#include <string>
+#include <sstream>
 
 namespace Dot {
 
@@ -23,25 +25,30 @@ namespace Dot {
     }
    
     
-    Card::Card(int attack,int defense,int agillity,int health)
-        :
-        m_Attack(attack),
-        m_Defense(defense),
-        m_Agillity(agillity),
-        m_Health(health)
-    {}
-
     Card::~Card()
     {
 
     }
     
     WarriorCard::WarriorCard(int attack, int defense,int agillity,int health)
-        : Card(attack,defense,agillity,health)
+         :
+        m_Type(Warrior),
+        m_Attack(attack),
+        m_Defense(defense),
+        m_Agillity(agillity),
+        m_Health(health)
     {
-        m_Type = Warrior;
     }
 
+    WarriorCard::WarriorCard(const WarriorCard& other)
+        :
+        m_Type(Warrior),
+        m_Attack(other.m_Attack),
+        m_Defense(other.m_Defense),
+        m_Agillity(other.m_Agillity),
+        m_Health(other.m_Health)
+    {
+    }
     void WarriorCard::Update(float percents, int boost)
     {
         if (PercentCheckRandom(percents))
@@ -50,16 +57,16 @@ namespace Dot {
         }
     }
 
-    void WarriorCard::ReceiveDamage(Type enemyType,int damage)
+    int WarriorCard::ReceiveDamage(Type enemyType,int damage)
     {
+        int oldHealth =m_Health;
         if (enemyType == Mage)
         {
-            m_Health -= RandomNumber(m_Defense,damage);
-            m_Defense--;
+            m_Health -= RandomNumber(0,damage/m_Defense);
         }
         else if (enemyType == Rogue)
         {
-            m_Health -= RandomNumber(m_Defense, damage*2);
+            m_Health -= RandomNumber(0, damage/2);
         }
         else if (enemyType == Archer)
         {
@@ -67,22 +74,39 @@ namespace Dot {
         }
         else if (enemyType == Warrior)
         {
-            m_Health--;
-            m_Defense -= 2;
+            m_Health -= RandomNumber(0,damage/m_Defense);
         }
+        return oldHealth - m_Health;
     }
 
     int WarriorCard::Attack()
-    {
-        return RandomNumber(0,m_Attack);
+    {   
+        int attack = m_Attack;
+        if (PercentCheckRandom(m_Agillity))
+        {
+            attack += 5;
+        }
+        return RandomNumber(0,attack);
     }
 
     MageCard::MageCard(int attack, int defense,int agillity,int health)
-        : Card(attack,defense,agillity,health)
+        :
+        m_Type(Mage),
+        m_Attack(attack),
+        m_Defense(defense),
+        m_Agillity(agillity),
+        m_Health(health)
     {
-        m_Type = Mage;
     }
-
+    MageCard::MageCard(const MageCard& other)
+        :
+        m_Type(Mage),
+        m_Attack(other.m_Attack),
+        m_Defense(other.m_Defense),
+        m_Agillity(other.m_Agillity),
+        m_Health(other.m_Health)
+    {
+    }
     void MageCard::Update(float percents, int boost)
     {
         if (PercentCheckRandom(percents))
@@ -91,40 +115,57 @@ namespace Dot {
         }
     }
 
-    void MageCard::ReceiveDamage(Type enemyType,int damage)
+    int MageCard::ReceiveDamage(Type enemyType,int damage)
     {
+        int oldHealth = m_Health;
         if (enemyType == Mage)
         {
-            m_Health--;
-            m_Defense -= 2;
+            m_Health = RandomNumber(0, damage);
         }
         else if (enemyType == Rogue)
         {
-            m_Health -= RandomNumber(0, damage*2);
+            m_Health -= RandomNumber(0, (damage*2)/m_Defense);
         }
         else if (enemyType == Archer)
         {
-            m_Health -= RandomNumber(m_Defense,damage);
+            m_Health -= RandomNumber(0,damage/m_Defense);
         }
         else if (enemyType == Warrior)
         {
-            m_Health -= RandomNumber(m_Defense,damage);
-            m_Defense--;
+            m_Health -= RandomNumber(0,damage/m_Defense);
         }
+        return oldHealth - m_Health;
     }
 
     int MageCard::Attack()
     {
-        return RandomNumber(0,m_Attack);
+        int attack = m_Attack;
+        if (PercentCheckRandom(m_Agillity))
+        {
+            attack += 5;
+        }
+        return RandomNumber(0,attack);
     }
 
     ArcherCard::ArcherCard(int attack, int defense,int agillity,int health)
-        : Card(attack,defense,agillity,health)
+         :
+        m_Type(Archer),
+        m_Attack(attack),
+        m_Defense(defense),
+        m_Agillity(agillity),
+        m_Health(health)
     {
-        m_Type = Archer;
     }
 
-
+    ArcherCard::ArcherCard(const ArcherCard& other)
+        :
+        m_Type(Archer),
+        m_Attack(other.m_Attack),
+        m_Defense(other.m_Defense),
+        m_Agillity(other.m_Agillity),
+        m_Health(other.m_Health)
+    {
+    }
     
     void ArcherCard::Update(float percents, int boost)
     {
@@ -134,8 +175,9 @@ namespace Dot {
         }
     }
 
-    void ArcherCard::ReceiveDamage(Type enemyType,int damage)
+    int ArcherCard::ReceiveDamage(Type enemyType,int damage)
     {
+        int oldHealth = m_Health;
         if (enemyType == Mage)
         {
             m_Health -= RandomNumber(m_Defense,damage);
@@ -154,19 +196,37 @@ namespace Dot {
             m_Health -= RandomNumber(m_Defense,damage);
             m_Defense--;
         }
+        return oldHealth - m_Health;
     }
     
     int ArcherCard::Attack()
     {
-        return RandomNumber(0,m_Attack+m_Agillity);
+        int attack = m_Attack;
+        if (PercentCheckRandom(m_Agillity))
+        {
+            attack += 5;
+        }
+        return RandomNumber(0,attack);
     }
 
     RogueCard::RogueCard(int attack, int defense,int agillity,int health)
-        : Card(attack,defense,agillity,health)
+         :
+        m_Type(Rogue),
+        m_Attack(attack),
+        m_Defense(defense),
+        m_Agillity(agillity),
+        m_Health(health)
     {
-        m_Type = Rogue;
     }
-
+    RogueCard::RogueCard(const RogueCard& other)
+        :
+        m_Type(Rogue),
+        m_Attack(other.m_Attack),
+        m_Defense(other.m_Defense),
+        m_Agillity(other.m_Agillity),
+        m_Health(other.m_Health)
+    {
+    }
     void RogueCard::Update(float percents, int boost)
     {
         if (PercentCheckRandom(percents))
@@ -175,30 +235,36 @@ namespace Dot {
             m_Agillity += (int)floor((double)boost/2.0f);
         }
     }
-    void RogueCard::ReceiveDamage(Type enemyType,int damage)
+    int RogueCard::ReceiveDamage(Type enemyType,int damage)
     {
+        int oldHealth = m_Health;
         if (enemyType == Mage)
         {
-            m_Health -= RandomNumber(0,damage);
+            m_Health -= RandomNumber(0,damage/m_Defense);
         }
         else if (enemyType == Rogue)
         {
             m_Health--;
-            m_Defense -= 2;
         }
         else if (enemyType == Archer)
         {  
-            m_Health -= RandomNumber(0, damage*2);
+            m_Health -= RandomNumber(0, damage/m_Defense);
         }
         else if (enemyType == Warrior)
         {
-            m_Health -= RandomNumber(m_Defense,damage);
+            m_Health -= RandomNumber(0,damage/m_Defense);
             m_Defense--;
         }
+        return oldHealth - m_Health;
     }
 
     int RogueCard::Attack()
     {
-        return RandomNumber(0,m_Attack+m_Agillity);
+        int attack = m_Attack;
+        if (PercentCheckRandom(m_Agillity))
+        {
+            attack += 5;
+        }
+        return RandomNumber(0,attack);
     }
 }

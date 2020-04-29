@@ -4,7 +4,6 @@ namespace Dot {
     class Card
     {
     public:
-        Card(int attack,int defense,int agillity,int health);
         virtual ~Card();
         
         enum Type
@@ -12,17 +11,33 @@ namespace Dot {
             Warrior,
             Mage,
             Archer,
-            Rogue
+            Rogue,
+            Num_Types
         };
-
+        
 
         virtual void Update(float percents, int boost) = 0;
-        virtual void ReceiveDamage(Type enemyType,int damage) = 0;
+        virtual int ReceiveDamage(Type enemyType,int damage) = 0;
         virtual int Attack() = 0;
 
-        virtual Type GetType() { return m_Type; }
-        bool Dead() { return m_Health <= 0;}
-    protected:
+        virtual Type GetType() = 0;
+        virtual bool Dead() = 0;
+    
+    };
+
+
+    class WarriorCard : public Card
+    {
+    public:
+        WarriorCard(int attack,int defense,int agillity,int health);
+        WarriorCard(const WarriorCard& other);
+        virtual void Update(float percents, int boost) override;
+        virtual int ReceiveDamage(Type enemyType,int damage) override;
+        virtual int Attack() override;
+
+        virtual Type GetType() override { return m_Type; }
+        virtual bool Dead() override { return m_Health <= 0;}
+    private:
         Type m_Type;
 
         
@@ -33,24 +48,26 @@ namespace Dot {
     };
 
 
-    class WarriorCard : public Card
-    {
-    public:
-        WarriorCard(int attack,int defense,int agillity,int health);
-        virtual void Update(float percents, int boost) override;
-        virtual void ReceiveDamage(Type enemyType,int damage) override;
-        virtual int Attack() override;
-    };
-
-
     class MageCard : public Card
     {
     public:
         MageCard(int attack,int defense,int agillity,int health);
+        MageCard(const MageCard& other);
+
         virtual void Update(float percents, int boost) override;
-        virtual void ReceiveDamage(Type enemyType,int damage) override;
+        virtual int ReceiveDamage(Type enemyType,int damage) override;
         virtual int Attack() override;
+
+        virtual Type GetType() override { return m_Type; }
+        virtual bool Dead() override { return m_Health <= 0;}
     private:
+        Type m_Type;
+
+        
+        int m_Attack;
+        int m_Defense;
+        int m_Agillity;
+        int m_Health;
 
     };
 
@@ -59,10 +76,22 @@ namespace Dot {
     {
     public:
         ArcherCard(int attack,int defense,int agillity,int health);
+        ArcherCard(const ArcherCard& other);
+
         virtual void Update(float percents, int boost) override;
-        virtual void ReceiveDamage(Type enemyType,int damage) override;
+        virtual int ReceiveDamage(Type enemyType,int damage) override;
         virtual int Attack() override;
+
+        virtual Type GetType() override { return m_Type; }
+        virtual bool Dead() override { return m_Health <= 0;}
     private:
+        Type m_Type;
+
+        
+        int m_Attack;
+        int m_Defense;
+        int m_Agillity;
+        int m_Health;
 
     };
 
@@ -70,10 +99,22 @@ namespace Dot {
     {
     public:
         RogueCard(int attack,int defense,int agillity,int health);
+        RogueCard(const RogueCard& other);
+
         virtual void Update(float percents, int boost) override;
-        virtual void ReceiveDamage(Type enemyType,int damage) override;
+        virtual int ReceiveDamage(Type enemyType,int damage) override;
         virtual int Attack() override;
-    private:
+
+        virtual Type GetType() override { return m_Type; }
+        virtual bool Dead() override { return m_Health <= 0;}
+   private:
+        Type m_Type;
+
+        
+        int m_Attack;
+        int m_Defense;
+        int m_Agillity;
+        int m_Health;
 
     };
 }

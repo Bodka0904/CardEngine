@@ -21,5 +21,7 @@ namespace Dot{
 		auto end = std::chrono::time_point_cast<std::chrono::microseconds>(m_End).time_since_epoch().count();     
         float time = (end - start);
         m_LastFrameTime = time;
+
+        
     }
 }

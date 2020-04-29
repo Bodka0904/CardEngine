@@ -16,17 +16,27 @@ public:
     Game();
     ~Game();
 
-    void Run();
+    void Run(float dt);
+    void GetInput();
 
 private:       
-    FrameTime m_FrameTime;
     LocalPlayer* m_Player1;
-    LocalPlayer* m_Player2;
+    AIPlayer* m_Player2;
+    
 
+    int m_LastRoundDamageToPlOne = 0;
+    int m_LastRoundDamageToPlTwo = 0;
+    
+    Card* m_Player1Card = nullptr;
+    Card* m_Player2Card = nullptr;
 
     bool m_Player1Dying = false;
     bool m_Player2Dying = false;
 
+    bool m_StartRound = false;
+
     ExplosionAnimation* m_Animation;
-    ExplosionAnimation* m_Animation2;
+
+    CardMoveAnimation* m_CardMove;
+    CardMoveAnimation* m_CardMove2;
 };

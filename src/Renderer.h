@@ -20,6 +20,9 @@ namespace Dot
         static void DrawQuad(const Vec2& l1,const Vec2& l2, char c);
         static void DrawCircle(const Vec2& pos,int radius, char c);
         
+
+        static int GetWidth() {return sc_Width;}
+        static int GetHeight() {return sc_Height;}
     private:
         Renderer(float frameLen);
 

@@ -13,11 +13,16 @@
 
     int main()
     {
+        FrameTime frameTime;
         bool running = true;
         Game game;
         while (running)
         {
-            game.Run();
+            frameTime.StartFrame();
+            game.Run(frameTime.GetSeconds());
+            frameTime.EndFrame();
+
+            game.GetInput();
             if (Input::KeyPressed(KeyCode::q))
                 running = false;
         }    

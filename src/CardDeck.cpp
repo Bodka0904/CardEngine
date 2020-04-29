@@ -111,4 +111,15 @@ namespace Dot{
         }   
         return nullptr; 
     }
+
+    
+    bool CardDeck::IsEmpty()
+    {
+       for (auto it : m_Cards)
+       {
+           if (!it.second.empty())
+            return false;
+       }
+       return true;
+    }
 }
